@@ -3,6 +3,8 @@
 # pylint: disable = invalid-name  # To disable "df" variable warning
 # pylint: disable = import-error,too-many-arguments,no-member
 
+from logging import debug, info
+
 import pandas as pd
 
 from locations_coordinates import LocationsCoordinates
@@ -45,15 +47,14 @@ class FilmsLocations:
         )
 
         self.df = self.df.drop(labels="empty", axis=1)  # drop empty column
-        print(self.df)
         self.df = self.df.drop_duplicates(subset=["name", "year", "location"])
-        print(self.df)
         # parse year, convert year to int64
         self.df.year = self.df.year.apply(
             lambda year: int(year[1:5]) if year and ('?' not in year) else -1
         )
 
-        print(self.df)
+        debug("Parsed dataset:")
+        debug(self.df)
 
     def create_locations_coordinates(self, df: pd.DataFrame) -> pd.DataFrame:
         """ Creates coordinates from locations names
@@ -85,21 +86,27 @@ class FilmsLocations:
     def process(self):
         """ Process the provided data to create map """
         # select films with certain year
-        print('Starting')
+        info('Starting FilmsLocations main process')
+
         selected_df = self.df[self.df['year'] == self.films_year]
-        print(selected_df)
+        info(f"Selected films with {self.films_year} year")
+        debug(selected_df)
 
         # create coordinates from locations
+        info("Starting getting coordinates from locations name, can take some time...")
         selected_df = self.create_locations_coordinates(selected_df)
-        print(selected_df)
+        info("Created coordinates from locations")
+        debug(selected_df)
 
         # create distance to central coordinates
         selected_df = self.create_distance_to_center(selected_df)
-        print(selected_df)
+        info("Created distance to central coordinates")
+        debug(selected_df)
 
-        # get 10 locations nearest to center location
+        # get up to 10 locations nearest to center location
         final_nearest_df = selected_df.nsmallest(10, 'distance')
-        print(final_nearest_df)
+        info("Got up to 10 locations nearest to center location")
+        debug(final_nearest_df)
 
         self.locations_map.create_map(final_nearest_df)
 

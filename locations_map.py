@@ -1,6 +1,7 @@
 """ Works with map with the use of folium method """
 
 import os
+from logging import info
 
 import pandas as pd
 import folium
@@ -30,6 +31,8 @@ class LocationsMap:
             os.makedirs(os.path.dirname(self.save_to))
         self.map.save(self.save_to)
 
+        info(f"Saved map to {self.save_to}")
+
     def create_map(self, df_films: pd.DataFrame):
         """ Create map based on provided pd.DataFrame """
         fg_film_markers = folium.FeatureGroup(name=f"Nearest films in {self.year}")
@@ -53,5 +56,7 @@ class LocationsMap:
         self.map.add_child(fg_film_markers)
         self.map.add_child(fg_path)
         self.map.add_child(folium.LayerControl())
+
+        info("Created map")
 
         self.save_map()

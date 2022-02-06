@@ -2,12 +2,15 @@
 by provided console input
 """
 
+# pylint: disable = import-error  # To disable import-error warning
+
 import argparse
 from typing import Callable
+from logging import INFO, getLogger
 
 from films_locations import FilmsLocations
 
-# pylint: disable = import-error  # To disable import-error warning
+getLogger().setLevel(INFO)
 
 
 def parse_args() -> argparse.Namespace:
@@ -60,14 +63,15 @@ def exception_handler(function: Callable,
 or none correct films in provided year were found.")
     except (Exception,) as err:  # pylint: disable=broad-except
         # Catches all errors that were not caught by previous checks.
-        print("Error: Unexpected exception occured.")
+        print("Error: Unexpected exception occurred.")
         print(f"Detailed error: {err}")
 
 
 def make_films_map(args: argparse.Namespace):
     """ Make films map by provided argparse.Namespace """
     locations = FilmsLocations(args.year, args.latitude, args.longitude,
-                               dataset_filename=args.path_to_dataset)
+                               dataset_filename=args.path_to_dataset,
+                               save_to=args.save_map_to)
     locations.process()
 
 
