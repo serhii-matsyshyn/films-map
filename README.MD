@@ -3,7 +3,7 @@
 Creates an html map with up to the 10 nearest films locations in a certain year by provided console input.  
 The web map shows information about the locations of films that were shot in a given year and the distance to them.
 
-##Information provided by the map
+## Information provided by the map
 The module allows you to get information about the nearest filming locations in the form of a web map.  
 This allows you to visualize a list of movie data and find out where the nearest movie locations are.  
 Sorting by film recording date allows you to select locations that were shot in a particular year.  
