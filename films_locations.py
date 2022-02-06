@@ -1,12 +1,13 @@
 """ Works with dataset of films locations, parses dataset and uses it to create map """
 
+# pylint: disable = invalid-name  # To disable "df" variable warning
+# pylint: disable = import-error,too-many-arguments,no-member
+
 import pandas as pd
 
 from locations_coordinates import LocationsCoordinates
 from locations_map import LocationsMap
 
-
-# pylint: disable = invalid-name  # To disable "df" variable warning
 
 pd.options.mode.chained_assignment = None
 # pd.set_option('display.max_rows', 2000000)
@@ -22,13 +23,15 @@ class FilmsLocations:
 
     def __init__(self, films_year,
                  center_latitude, center_longitude,
-                 dataset_filename="locations_100.list"):
+                 dataset_filename="locations_100.list",
+                 save_to: str = 'map.html'):
         self.films_year = films_year
         self.center_longitude = center_longitude
         self.center_latitude = center_latitude
 
         self.locations_coordinates = LocationsCoordinates()
-        self.locations_map = LocationsMap(center_latitude, center_longitude, films_year)
+        self.locations_map = LocationsMap(center_latitude, center_longitude, films_year,
+                                          save_to=save_to)
         self.df = pd.read_csv(
             dataset_filename,
             encoding='ansi',
@@ -46,7 +49,7 @@ class FilmsLocations:
         self.df = self.df.drop_duplicates(subset=["name", "year", "location"])
         print(self.df)
         # parse year, convert year to int64
-        self.df['year'] = self.df['year'].apply(
+        self.df.year = self.df.year.apply(
             lambda year: int(year[1:5]) if year and ('?' not in year) else -1
         )
 
@@ -82,6 +85,7 @@ class FilmsLocations:
     def process(self):
         """ Process the provided data to create map """
         # select films with certain year
+        print('Starting')
         selected_df = self.df[self.df['year'] == self.films_year]
         print(selected_df)
 

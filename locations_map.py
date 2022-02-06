@@ -1,5 +1,7 @@
 """ Works with map with the use of folium method """
 
+import os
+
 import pandas as pd
 import folium
 
@@ -22,6 +24,10 @@ class LocationsMap:
 
     def save_map(self):
         """ Save map to html file"""
+        # create map directory if not exists
+        if ((len(os.path.dirname(self.save_to)) > 1) and
+                (not os.path.exists(os.path.dirname(self.save_to)))):
+            os.makedirs(os.path.dirname(self.save_to))
         self.map.save(self.save_to)
 
     def create_map(self, df_films: pd.DataFrame):
