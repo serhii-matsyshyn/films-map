@@ -50,7 +50,7 @@ class LocationsMap:
                 folium.PolyLine([[film_latitude, film_longitude],
                                  [self.center_latitude, self.center_longitude]],
                                 color="red", weight=2.5, opacity=1,
-                                popup=f"Distance: {film['distance']}")
+                                popup=f"Distance: {film['distance']:.3f} km")
             )
 
         self.map.add_child(fg_film_markers)
